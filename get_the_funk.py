@@ -14,6 +14,7 @@ class BeamerAsLight:
         self._display_surf = None
         self.size = self.width, self.height = 60*16, 60*9
         self.fullscreen = False
+        self.fullscreen_size = (0,0)
         self.animation_pos = 0.0
         self.effect_animation_pos = 0.0
         self.current_mood = moods.gray
@@ -32,13 +33,12 @@ class BeamerAsLight:
         pygame.display.set_caption("c't Beamer as Light")
 
     def display_fullscreen(self):
-        pygame.display.set_mode((self.fullscreen_w,self.fullscreen_h),pygame.FULLSCREEN)
-        self.size = self.width, self.height = self.fullscreen_w, self.fullscreen_h
+        pygame.display.set_mode(self.fullscreen_size,pygame.FULLSCREEN)
+        self.size = self.width, self.height = self.fullscreen_size
 
     def init(self):
         pygame.init()
-        self.fullscreen_w = pygame.display.Info().current_w
-        self.fullscreen_h = pygame.display.Info().current_h
+        self.fullscreen_size = (pygame.display.Info().current_w,pygame.display.Info().current_h)
         self.display_window()
         return True
 
