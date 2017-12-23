@@ -4,7 +4,7 @@ from __future__ import division, print_function, unicode_literals
 import pygame
 import animations
 import effects
-from moods import *
+import moods
 from time import time
 
 
@@ -16,7 +16,7 @@ class BeamerAsLight:
         self.fullscreen = False
         self.animation_pos = 0.0
         self.effect_animation_pos = 0.0
-        self.current_mood = gray
+        self.current_mood = moods.gray
         self.beat = [5.0]
         self.beat_valid = False
         self.beat_limit = 15
@@ -79,36 +79,36 @@ class BeamerAsLight:
                 self.last_beat_pressed_time = time()
                 print(self.beat_valid)
                 print(self.beat)
-            elif event.key == 8:
+            elif event.key == 8: # Key: BackSpace
                 self.last_beat = time()
                 self.animation_direction *= -1
-            elif event.scancode == 116:
+            elif event.scancode == 116: # Key: Arrow down
                 self.beat = [2 * b for b in self.beat]
-            elif event.scancode == 111:
+            elif event.scancode == 111: # Key: Arrow up
                 self.beat = [0.5 * b for b in self.beat]
-            elif event.scancode == 24:
-                self.current_mood = gray
+            elif event.scancode == 24: # Key: Q
+                self.current_mood = moods.gray
             elif event.scancode == 25:
-                self.current_mood = fire
+                self.current_mood = moods.fire
             elif event.scancode == 26:
-                self.current_mood = water
+                self.current_mood = moods.water
             elif event.scancode == 27:
-                self.current_mood = green
+                self.current_mood = moods.green
             elif event.scancode == 28:
-                self.current_mood = yellow
+                self.current_mood = moods.yellow
             elif event.scancode == 29:
-                self.current_mood = pink
+                self.current_mood = moods.pink
             elif event.scancode == 30:
-                self.current_mood = red
+                self.current_mood = moods.red
             elif event.scancode == 31:
-                self.current_mood = bluered
+                self.current_mood = moods.bluered
             elif event.scancode == 32:
-                self.current_mood = yellowpink
+                self.current_mood = moods.yellowpink
             elif event.scancode == 33:
-                self.current_mood = brown
+                self.current_mood = moods.brown
             elif event.scancode == 34:
-                self.current_mood = cyan
-            elif event.scancode == 38:
+                self.current_mood = moods.cyan
+            elif event.scancode == 38: # Key: A
                 self.animation = animations.single_circle
             elif event.scancode == 39:
                 self.animation = animations.horizontal_line
@@ -141,13 +141,13 @@ class BeamerAsLight:
         elapsed_time = now - self.last_frame_time
         beat = sum(self.beat) / len(self.beat)
         keys = pygame.key.get_pressed()
-        if keys[281]:
+        if keys[281]: # Key: Page down
             beat = 2*beat
-        if keys[280]:
+        if keys[280]: # Key: Page up
             beat = beat/2
-        if keys[278]:
+        if keys[278]: # Key: Pos1
             beat = beat/4
-        if keys[127]:
+        if keys[127]: # Key: Del
             self.last_beat = time() - self.animation_direction * self.animation_pos * beat
         if self.last_beat_pressed_time and self.beat_valid and now > self.last_beat_pressed_time + 2 * beat:
             print("Invalidated Beat")
@@ -155,7 +155,7 @@ class BeamerAsLight:
         if now >= self.last_beat + beat:
             self.last_beat += beat
             self.animation_direction *= -1
-        if not keys[279]:
+        if not keys[279]: # Key: End
             self.animation_pos = (self.animation_pos + self.animation_direction * elapsed_time / beat) % 1
             self.effect_animation_pos = (self.effect_animation_pos + elapsed_time / (beat * 4)) % 1
         self.last_frame_time = now
