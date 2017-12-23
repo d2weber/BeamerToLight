@@ -79,12 +79,12 @@ class BeamerAsLight:
                 self.last_beat_pressed_time = time()
                 print(self.beat_valid)
                 print(self.beat)
-            elif event.key == 9:
+            elif event.key == 8:
                 self.last_beat = time()
                 self.animation_direction *= -1
-            elif event.scancode == 20:
+            elif event.scancode == 116:
                 self.beat = [2 * b for b in self.beat]
-            elif event.scancode == 61:
+            elif event.scancode == 111:
                 self.beat = [0.5 * b for b in self.beat]
             elif event.scancode == 24:
                 self.current_mood = gray
@@ -141,19 +141,21 @@ class BeamerAsLight:
         elapsed_time = now - self.last_frame_time
         beat = sum(self.beat) / len(self.beat)
         keys = pygame.key.get_pressed()
-        if keys[313] or keys[301]:
+        if keys[281]:
             beat = 2*beat
-        if keys[304]:
+        if keys[280]:
             beat = beat/2
-        if keys[306]:
+        if keys[278]:
             beat = beat/4
+        if keys[127]:
+            self.last_beat = time() - self.animation_direction * self.animation_pos * beat
         if self.last_beat_pressed_time and self.beat_valid and now > self.last_beat_pressed_time + 2 * beat:
             print("Invalidated Beat")
             self.last_beat_pressed_time = None
         if now >= self.last_beat + beat:
             self.last_beat += beat
             self.animation_direction *= -1
-        if not keys[308]:
+        if not keys[279]:
             self.animation_pos = (self.animation_pos + self.animation_direction * elapsed_time / beat) % 1
             self.effect_animation_pos = (self.effect_animation_pos + elapsed_time / (beat * 4)) % 1
         self.last_frame_time = now
