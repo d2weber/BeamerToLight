@@ -17,6 +17,7 @@ class BeamerAsLight:
         self.fullscreen_size = (0,0)
         self.animation_pos = 0.0
         self.effect_animation_pos = 0.0
+        self.effect_color_pos = 0.0
         self.current_mood = moods.gray
         self.beat = [5.0]
         self.beat_valid = False
@@ -108,6 +109,8 @@ class BeamerAsLight:
                 self.current_mood = moods.brown
             elif event.scancode == 34:
                 self.current_mood = moods.cyan
+            elif event.scancode == 35:
+                self.current_mood = moods.il_mio_giallo
             elif event.scancode == 38: # Key: A
                 self.animation = animations.single_circle
             elif event.scancode == 39:
@@ -149,6 +152,10 @@ class BeamerAsLight:
             beat = beat/4
         if keys[127]: # Key: Del
             self.last_beat = time() - self.animation_direction * self.animation_pos * beat
+        if keys[304]: # Key: Del
+            effect_beat = 2.168404344971009e-18
+        else:
+            effect_beat = beat
         if self.last_beat_pressed_time and self.beat_valid and now > self.last_beat_pressed_time + 2 * beat:
             print("Invalidated Beat")
             self.last_beat_pressed_time = None
@@ -157,7 +164,8 @@ class BeamerAsLight:
             self.animation_direction *= -1
         if not keys[279]: # Key: End
             self.animation_pos = (self.animation_pos + self.animation_direction * elapsed_time / beat) % 1
-            self.effect_animation_pos = (self.effect_animation_pos + elapsed_time / (beat * 4)) % 1
+            self.effect_animation_pos = (self.effect_animation_pos + elapsed_time / (effect_beat * 4)) % 1
+            self.effect_color_pos = (self.effect_color_pos + elapsed_time / (effect_beat * 4 * 0.718)) % 1
         self.last_frame_time = now
 
     def render(self):
@@ -173,9 +181,9 @@ class BeamerAsLight:
             effects.flash(surface, self.effect_animation_pos)
         elif 52 in self.unknown_keys_dict and keys[self.unknown_keys_dict[52]]:
             surface.fill((0, 0, 0))
-            effects.wave(surface, self.effect_animation_pos)
+            effects.wave(surface, self.effect_animation_pos, self.effect_color_pos)
         elif 53 in self.unknown_keys_dict and keys[self.unknown_keys_dict[53]]:
-            effects.wave(surface, self.effect_animation_pos)
+            effects.wave(surface, self.effect_animation_pos, self.effect_color_pos)
         elif 54 in self.unknown_keys_dict and keys[self.unknown_keys_dict[54]]:
             surface.fill((0, 0, 0))
             effects.snowflakes(surface, self.effect_animation_pos)
@@ -183,6 +191,15 @@ class BeamerAsLight:
             effects.snowflakes(surface, self.effect_animation_pos)
         elif 56 in self.unknown_keys_dict and keys[self.unknown_keys_dict[56]]:
             surface.fill((0, 0, 0))
+        elif 57 in self.unknown_keys_dict and keys[self.unknown_keys_dict[57]]:
+            effects.horizontal_line_effect(surface, self.effect_animation_pos)
+        elif 58 in self.unknown_keys_dict and keys[self.unknown_keys_dict[58]]:
+            effects.vertical_line_effect(surface, self.effect_animation_pos, self.effect_color_pos)
+        elif 59 in self.unknown_keys_dict and keys[self.unknown_keys_dict[59]]:
+            effects.double_wave_effect(surface, self.effect_animation_pos, self.effect_color_pos)
+        elif 60 in self.unknown_keys_dict and keys[self.unknown_keys_dict[60]]:
+            effects.single_circle_effect(surface, self.effect_animation_pos, self.effect_color_pos)
+
 
     @staticmethod
     def cleanup():
